@@ -6,7 +6,7 @@ on:
       - "v*"
 
 permissions:
-  contents: write      # REQUIRED for GitHub Release
+  contents: write
 
 jobs:
   build:
@@ -34,6 +34,7 @@ jobs:
       with:
         tag_name: ${{ github.ref_name }}
         name: "Release ${{ github.ref_name }}"
+        repository: ${{ github.repository }}                 # ← includes owner + repo automatically
         body: "VRM GUI Tool release build for Windows"
         draft: false
         prerelease: false
