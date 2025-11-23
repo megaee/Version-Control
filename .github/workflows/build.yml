@@ -38,6 +38,9 @@ jobs:
         draft: false
         prerelease: false
         generate_release_notes: true
+        immutableCreate: false
+        replacesArtifacts: true
+        generateReleaseNotes: false
         files: |
           dist/*.exe
           dist/*.zip
