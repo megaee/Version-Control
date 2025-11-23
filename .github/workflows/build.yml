@@ -1,1 +1,27 @@
-name: Build & Releaseon:  push:    tags:      - "v*"jobs:  build:    runs-on: windows-latest    steps:    - uses: actions/checkout@v3    - uses: actions/setup-python@v4      with:        python-version: "3.10"    - run: pip install pyinstaller -r requirements.txt    - run: |        pyinstaller app/main.py --onefile --name MyApp.exe        mkdir dist-upload        copy dist\MyApp.exe dist-upload\MyApp.exe    - uses: ncipollo/release-action@v1      with:        artifacts: "dist-upload/*"        token: ${{ secrets.GITHUB_TOKEN }}
+name: Build & Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - run: pip install pyinstaller -r requirements.txt
+
+    - run: |
+        pyinstaller app/main.py --onefile --name MyApp.exe
+        mkdir dist-upload
+        copy dist\MyApp.exe dist-upload\MyApp.exe
+
+    - uses: ncipollo/release-action@v1
+      with:
+        artifacts: "dist-upload/*"
+        token: ${{ secrets.GITHUB_TOKEN }}
