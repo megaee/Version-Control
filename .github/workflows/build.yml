@@ -29,20 +29,8 @@ jobs:
     - name: Make ZIP
       run: powershell Compress-Archive -Path dist/VRM_Tool.exe -DestinationPath dist/VRM_Tool.zip
 
-    - name: Create Release and Upload
-      uses: softprops/action-gh-release@v1
+    - name: Upload Release
+      uses: ncipollo/release-action@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        name: "Release ${{ github.ref_name }}"
-        body: "VRM GUI Tool release build for Windows"
-        draft: false
-        prerelease: false
-        generate_release_notes: true
-        immutableCreate: false
-        replacesArtifacts: true
-        generateReleaseNotes: false
-        files: |
-          dist/*.exe
-          dist/*.zip
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        artifacts: "dist/MyApp.exe"
+        token: ${{ secrets.GITHUB_TOKEN }}
