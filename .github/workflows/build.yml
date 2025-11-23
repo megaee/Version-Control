@@ -5,23 +5,38 @@ on:
     tags:
       - "v*"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - run: pip install pyinstaller -r requirements.txt
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
 
-    - run: |
-        pyinstaller app/main.py --onefile --name MyApp.exe
-        mkdir dist-upload
-        copy dist\MyApp.exe dist-upload\MyApp.exe
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pyinstaller
 
-    - uses: ncipollo/release-action@v1
-      with:
-        artifacts: "dist-upload/*"
-        token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build executable
+        run: pyinstaller app/main.py --name MyApp --onefile
+
+      - name: Prepare upload
+        run: |
+          mkdir dist-upload
+          move dist\\MyApp.exe dist-upload\\MyApp.exe
+
+      - name: Create GitHub Release & upload artifact
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "dist-upload/*"
+          token: ${{ secrets.GITHUB_TOKEN }}
