@@ -6,7 +6,7 @@ on:
       - "v*"
 
 permissions:
-  contents: write
+  contents: write      # REQUIRED for GitHub Release
 
 jobs:
   build:
@@ -27,14 +27,13 @@ jobs:
       run: pyinstaller app/main.py --name VRM_Tool --onefile --noconsole
 
     - name: Make ZIP
-      run: powershell Compress-Archive dist\VRM_Tool.exe dist\VRM_Tool.zip
+      run: powershell Compress-Archive -Path dist/VRM_Tool.exe -DestinationPath dist/VRM_Tool.zip
 
     - name: Create Release and Upload
       uses: softprops/action-gh-release@v1
       with:
         tag_name: ${{ github.ref_name }}
         name: "Release ${{ github.ref_name }}"
-        repository: ${{ github.repository }}                 # ← includes owner + repo automatically
         body: "VRM GUI Tool release build for Windows"
         draft: false
         prerelease: false
